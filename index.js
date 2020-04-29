@@ -1,2 +1,0 @@
-import {workers} from  './workers';
-
