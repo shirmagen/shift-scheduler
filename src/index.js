@@ -1,8 +1,20 @@
 import _ from 'lodash'
+
 import {workers} from './workers';
+import {week} from './schedule';
 
-const week = [{name: 1}, {name: 2}, {name: 3},{name: 4}, {name: 5},{name: 6},{name: 7}];
-const getWorkerOnDay = dayName => workers.filter(x => !(_.includes(x.constraints, dayName)));
-const shifts = week.map(({name}) => _.head(getWorkerOnDay(name)));
+const getWorkerOnDay = dayNumber => {
+    const optionalWorkers = workers.filter(x => !(_.includes(x.constraints, dayNumber)));
+    const worker = _.head(optionalWorkers);
+    worker.constraints.push(dayNumber + 1);
 
-console.log(shifts[4]);
+    return worker;
+
+};
+
+const shifts = week.map(({number}) => getWorkerOnDay(number));
+
+week.forEach(day => day.worker = shifts[day.number - 1].id);
+
+// console.log(shifts);
+console.log(week);
