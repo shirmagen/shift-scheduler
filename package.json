@@ -1,0 +1,41 @@
+{
+  "name": "shift-scheduler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production",
+    "start": "nodemon --watch src --exec \"babel-node\" src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shirmagen/shift-scheduler.git"
+  },
+  "keywords": [],
+  "author": "Shir Magen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shirmagen/shift-scheduler/issues"
+  },
+  "homepage": "https://github.com/shirmagen/shift-scheduler#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-es2016": "^7.0.0-beta.53",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.5",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2016": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "nodemon": "^1.18.10",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
