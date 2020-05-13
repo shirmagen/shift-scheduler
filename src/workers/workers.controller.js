@@ -1,23 +1,26 @@
 import {workers} from './workers.consts';
 import _ from 'lodash';
 
-export const getTwoWorkersOnDay = dayNumber => {
-    const optionalWorkers = workers.filter(x => !(_.includes(x.constraints, dayNumber)) && x.shiftsAMonth > 0 && x.isSenior == 1);
-    const optionalThatPrefer = optionalWorkers.filter(x => !(_.includes(x.preferNot, dayNumber)));
-    const firstWorker = optionalThatPrefer > 0 ? getWorkerFromOptions(optionalThatPrefer) : getWorkerFromOptions(optionalWorkers)
-    if(firstWorker == null)
-    {
-        return {first: {id: 0}, second: {id:0}};
-    }
+export const getTwoWorkersOnDay = ({number, isWeekEnd}) => {
+    const optionalWorkers = isWeekEnd ? weekendWorkersOptions(workers, number) : basicWorkersOptions(workers, number);
+    const optionalThatPrefer = optionalWorkers.filter(x => !(_.includes(x.preferNot, number)));
+    const firstWorker = optionalThatPrefer > 0 ? getWorkerFromOptions(optionalThatPrefer) : getWorkerFromOptions(optionalWorkers);
 
-    updateWorkerAfterPlaced({dayNumber, worker: firstWorker});
-    const secondWorker = getSecondWorker(firstWorker);
-    updateWorkerAfterPlaced({dayNumber, worker: secondWorker});
+    updateWorkerAfterPlaced({number, worker: firstWorker});
+    const secondWorker = firstWorker != null ? getSecondWorker(firstWorker) : {id: 0};
+    updateWorkerAfterPlaced({number, worker: secondWorker});
 
     return {first: firstWorker, second: secondWorker};
 };
 
-const getWorkerFromOptions = options => _.maxBy(options, x => x.shiftsAMonth);
+const weekendWorkersOptions = (workers, number) => basicWorkersOptions(workers, number).filter(x => x.shabats == 0);
+const basicWorkersOptions = (workers, number) => workers.filter(x => !(_.includes(x.constraints, number)) && x.shiftsAMonth > 0 && x.isSenior == 1);
+
+const getWorkerFromOptions = options => {
+    const firstWorker = _.maxBy(options, x => x.shiftsAMonth);
+    console.log( firstWorker != null ? firstWorker : {id: 0});
+    return firstWorker != null ? firstWorker : {id: 0};
+};
 const getSecondWorker = ({id, shiftsAMonth, gender}) => {
     let secondWorkerOptions = [];
     while(secondWorkerOptions.length == 0 && shiftsAMonth > 0)
@@ -52,7 +55,7 @@ const updatePreferNot = ({dayNumber, worker}) => {
 const updateShiftsAMonth = worker => {worker.shiftsAMonth--};
 
 const updateWorkerAfterPlaced = ({dayNumber, worker}) => {
-    if(worker.id != 0)
+    if(worker.id == 0) return;
      updateConstraints({dayNumber, worker});
      updatePreferNot({dayNumber, worker});
      updateShiftsAMonth(worker);
